@@ -105,6 +105,7 @@ const PasswordGenerator = () => {
   const [length, setLength] = useState(8); // Default password length
   const [includeNumber, setIncludeNumber] = useState(false); // Checkbox state for number inclusion
   const [includeCharacter, setIncludeCharacter] = useState(false); // Checkbox state for character inclusion
+  const [buttonText, setButtonText] = useState('Copy');
 
   const handleSliderChange = (e) => {
     const newLength = parseInt(e.target.value);
@@ -139,11 +140,23 @@ const PasswordGenerator = () => {
     }
 
     setPassword(newPassword);
+    
   };
-
+ 
   const handleCopy = () => {
-    // Copy to clipboard functionality
-    // ...
+    navigator.clipboard.writeText(password)
+      .then(() => {
+        // Password copied successfully
+        console.log('Password copied to clipboard:', password);
+        setButtonText('Copied');
+        setTimeout(() => {
+          setButtonText('Copy');
+        }, 200); // Change back to 'Copy' after 2 seconds
+      })
+      .catch((error) => {
+        // Unable to copy password
+        console.error('Error copying password:', error);
+      });
   };
 
   return (
@@ -156,7 +169,7 @@ const PasswordGenerator = () => {
           value={password}
           className="flex-grow px-4 py-2 rounded-md mr-2"
         />
-        <button className="px-4 py-2 bg-blue-500 text-white rounded-md" onClick={handleCopy}>Copy</button>
+        <button className="px-4 py-2 bg-blue-500 text-white rounded-md" onClick={handleCopy}>{buttonText}</button>
       </div>
       <div className="mt-4">
         <label htmlFor="length">Length: <span className="ml-0.5 mr-0.5">{length}</span></label>
